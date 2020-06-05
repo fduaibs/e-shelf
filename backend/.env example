@@ -1,0 +1,7 @@
+ACCESS_TOKEN_SECRET = //on terminal: run node, then run "require('crypto').randomBytes(64).toString('Hex')" without quotes
+REFRESH_TOKEN_SECRET = //on terminal: run node, then run "require('crypto').randomBytes(64).toString('Hex')" without quotes
+
+DB_LOGIN = 
+DB_PASSWORD = 
+DB_NAME = 
+CLUSTER_NAME = 
