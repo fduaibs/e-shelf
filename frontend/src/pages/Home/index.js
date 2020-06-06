@@ -13,6 +13,9 @@ export default function Home() {
       <Link className="back-link" to="/login">
         Login
       </Link>
+      <Link className="back-link" to="/vehicles">
+        Vehicles
+      </Link>
     </div>
   );
 }
