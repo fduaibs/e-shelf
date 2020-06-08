@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi'
 
-import api from '../../services/api';
+import api from '../../services/axiosConfig';
 import './styles.css';
 
 import eshelfLogo from '../../assets/eshelfLogo.png';
@@ -15,14 +15,29 @@ export default function Register() {
   async function handleRegister(e) {
     e.preventDefault();
 
+    const accessToken = localStorage.getItem('accessToken');  
+
     const data = {
       name,
       email,
       password
     }
 
-    const response = await api.post('users', data);
-    console.log(response)
+    try{
+      const response = await api.post('users/new', data, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        },
+      });
+      if(response.status === 201) {
+        setName('');
+        setEmail('');
+        setPassword('');
+        alert('Usuário criado com sucesso.');
+      }
+    } catch(error) {
+      alert('Não foi possível criar um novo usuário, tente novamente.');
+    }
   }
 
   return (

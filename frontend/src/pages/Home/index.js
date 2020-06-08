@@ -7,8 +7,8 @@ import './styles.css';
 export default function Home() {
   return (
     <div className="home-container">
-      <Link className="back-link" to="/register">
-        Register
+      <Link className="back-link" to="/users/new">
+        Create new user
       </Link>
       <Link className="back-link" to="/login">
         Login

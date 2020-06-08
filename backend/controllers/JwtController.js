@@ -9,7 +9,7 @@ module.exports = {
     if(!token) return response.sendStatus(401);
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-      if(error) return response.sendStatus(403);
+      if(error) return response.sendStatus(401);
       request.user = user;
       next();
     })
@@ -33,13 +33,13 @@ module.exports = {
     if(!refreshToken) return response.sendStatus(401);
 
     refreshToken = await RefreshTokenModel.findOne({ token: refreshToken });
-    if(!refreshToken) return response.sendStatus(403); 
+    if(!refreshToken) return response.sendStatus(401); 
     
     jwt.verify( refreshToken.token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
-      if(error) return response.sendStatus(403);
+      if(error) return response.sendStatus(401);
       const { _id, name, email } = user;
       const accessToken = jwt.sign({ _id: _id, name: name, email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
-      response.json({ accessToken: accessToken });
+      response.status(201).json({ accessToken: accessToken });
     })
   }
 }

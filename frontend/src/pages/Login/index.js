@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
-import api from '../../services/api';
+import api from '../../services/axiosConfig';
 import './styles.css';
 
 import eshelfLogoImg from '../../assets/eshelfLogo.png';
