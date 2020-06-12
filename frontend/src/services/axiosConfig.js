@@ -6,8 +6,6 @@ const api = axios.create({
 });
 
 const tokenInterceptor = api.interceptors.response.use(function (response) {
-  // Any status code that lie within the range of 2xx cause this function to trigger
-  // Do something with response data
   return response;
 
 }, function (error) {
@@ -16,7 +14,7 @@ const tokenInterceptor = api.interceptors.response.use(function (response) {
   const refreshToken = localStorage.getItem('refreshToken');
   if(!refreshToken) {
     localStorage.clear();
-    //set n auth
+    //set not auth
     history.push('/login');
   }
 
@@ -26,6 +24,12 @@ const tokenInterceptor = api.interceptors.response.use(function (response) {
       localStorage.setItem('accessToken', response.data.accessToken);
       error.response.config.headers['Authorization'] = `Bearer ${response.data.accessToken}`
       return api(error.response.config);
+    }
+  }).catch(error => {
+    if(error.response.status === 401) {
+      localStorage.clear();
+      //set not auth
+      history.push('/login');
     }
   });
 });
