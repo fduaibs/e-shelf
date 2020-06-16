@@ -12,7 +12,17 @@ module.exports = {
       if(error) return response.sendStatus(401);
       request.user = user;
       next();
-    })
+    });
+  },
+  authenticateRefreshToken(request, response, next) {
+    const { refreshToken } = request.body;
+    if(!refreshToken) return response.sendStatus(401);
+
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
+      if(error) return response.sendStatus(401);
+      request.user = user;
+      next();
+    });
   },
   createAccessToken(user) {
     const { name, email, _id } = user;
@@ -29,7 +39,7 @@ module.exports = {
     return refreshToken;
   },
   async store(request, response) {
-    let refreshToken = request.body.refreshToken;
+    let { refreshToken } = request.body;
     if(!refreshToken) return response.sendStatus(401);
 
     refreshToken = await RefreshTokenModel.findOne({ token: refreshToken });
