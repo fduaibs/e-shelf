@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
-import api from '../../services/axiosConfig';
+import { useAuth } from '../../contexts/AuthContext';
+
 import './styles.css';
 
 import eshelfLogoImg from '../../assets/eshelfLogo.png';
@@ -11,28 +12,12 @@ import eshelfImg from '../../assets/eshelf.png';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
+    
+  const { login } = useAuth();
 
-  async function handleLogin(e) {
+  function handleLogin(e) {
     e.preventDefault();
-    try {
-      const response = await api.get('login', {
-        auth: {
-          username: email,
-          password: password,
-        }
-      });
-
-      localStorage.setItem('userId', response.data.user._id);
-      localStorage.setItem('userName', response.data.user.name);
-      localStorage.setItem('userEmail', response.data.user.email);
-      localStorage.setItem('accessToken', response.data.accessToken);
-      localStorage.setItem('refreshToken', response.data.refreshToken);
-      
-      history.push('/');
-    } catch (error) {
-      alert('Falha no login, tente novamente.');
-    }    
+    login(email, password);
   }
 
   return (
