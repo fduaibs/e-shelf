@@ -20,7 +20,7 @@ routes.put('/users/:id', JwtController.authenticateAccessToken, UserController.u
 routes.delete('/users/:id', JwtController.authenticateAccessToken, UserController.destroy);
 
 routes.get('/login', LoginController.login);
-routes.delete('/logout', JwtController.authenticateAccessToken, LoginController.logout);
+routes.delete('/logout', JwtController.authenticateRefreshToken, LoginController.logout);
 
 routes.post('/token', JwtController.store);
 
