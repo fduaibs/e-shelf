@@ -22,10 +22,14 @@ module.exports = {
   },
 
   async logout(request, response) {
-    const user = request.user; 
+    const user = request.user;
+    if(!user) return response.sendStatus(401);
+    
+    let { refreshToken } = request.body;
+    
     try {
-      const refreshToken = await RefreshTokenModel.deleteMany({ admin_id: user._id });
-      if(!refreshToken) return response.sendStatus(404);
+      refreshToken = await RefreshTokenModel.deleteOne({ token: refreshToken });
+      if(!refreshToken.deletedCount) return response.sendStatus(404);
       return response.json({ _id: user._id, name: user.name, email: user.email });  
     } catch(error) {
         response.status(400).json(error);
