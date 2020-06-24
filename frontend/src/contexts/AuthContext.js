@@ -5,29 +5,33 @@ import api from '../services/axiosConfig';
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function loadDataFromStorage() {
-      const storagedUser = localStorage.getItem('user');
-      const storagedRefreshToken = localStorage.getItem('refreshToken');
+  const [user, setUser] = useState({ _id: null, email: null, name: null });
+  const [signed, setSigned] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true);
   
-      if(storagedUser && storagedRefreshToken) {
-        try{
-          const accessToken = await api.post('/token', { refreshToken: storagedRefreshToken });
-          if(accessToken) {
-            setUser(JSON.parse(storagedUser));
-            localStorage.setItem('accessToken', accessToken.data.accessToken);
-          }
-        } catch(error) {
-          //refresh token da storage não é valido
-        }
-      }
+  useEffect(() => {
+    const storagedUser = JSON.parse(localStorage.getItem('user'));
+    const storagedRefreshToken = localStorage.getItem('refreshToken');
+
+    if(storagedUser && storagedRefreshToken) {
+      setUser(storagedUser);
+      setSigned(true);
     }
-    loadDataFromStorage();
+    setLoadingUser(false);
   }, []);
 
-  async function login(email, password) {    
+  function verifyStorage() {
+    const storagedUser = JSON.parse(localStorage.getItem('user'));
+    const storagedRefreshToken = localStorage.getItem('refreshToken');
+
+    if(!storagedRefreshToken || !storagedUser) {
+      localStorage.clear();
+      setUser({ _id: null, email: null, name: null });
+      setSigned(false);
+    }
+  }
+
+  async function login(email, password) { 
     try {
       const response = await api.get('/login', {
         auth: {
@@ -41,8 +45,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('refreshToken', response.data.refreshToken);
 
       setUser(response.data.user);
+      setSigned(true);
     } catch (error) {
-      console.log(error)
       alert('Falha no login, tente novamente.');
     }     
   }
@@ -52,16 +56,17 @@ export const AuthProvider = ({ children }) => {
     if(refreshToken) {
       try{
         await api.delete('logout', { refreshToken: refreshToken });
+        localStorage.clear();
+        setUser({ _id: null, email: null, name: null });
+        setSigned(false);    
       } catch (error) {
         alert('Falha ao deslogar, tente novamente.');
       }
     }
-    localStorage.clear();
-    setUser(null);
   }
   
   return (
-    <AuthContext.Provider value={{signed: !!user, user, login, logout}}>
+    <AuthContext.Provider value={{signed, user, loadingUser, login, logout, verifyStorage}}>
       {children}
     </AuthContext.Provider>
   );

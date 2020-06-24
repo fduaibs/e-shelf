@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FiPower, FiTrash2 } from 'react-icons/fi';
+import { FiTrash2 } from 'react-icons/fi';
 
+import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/axiosConfig';
 
 import './styles.css';
 
-import eshelfLogo from '../../assets/eshelfLogo.png';
-
 export default function Vehicles() {
   const [vehicles, setVehicles] = useState([]);
 
+  const { signed, verifyStorage } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
 
   useEffect(() => {
@@ -26,6 +26,10 @@ export default function Vehicles() {
   }, [vehicles]);
 
   async function handleDeleteVehicle(vehicleId) {
+    if(!signed) {
+      localStorage.clear();
+      alert('Você deve estar logado para excluir veículos.');
+    }
     try {
       await api.delete(`vehicles/${vehicleId}`, {
         headers: {
@@ -33,37 +37,31 @@ export default function Vehicles() {
         }
       });
     } catch(error) {
-      alert('Não foi possível deletar o veículo, tente novamente.')
+      verifyStorage();
+      alert('Não foi possível deletar o veículo, tente novamente.');
     }
   }
 
   return (
     <div className="vehicles-container">
       <header>
-        <img src={eshelfLogo} alt="E-Shelf"/>
-        <span>Bem vindo, user</span>
-
-        <Link className="button" to="/vehicles/new">Cadastrar novo veículo</Link>
-        <button type="button">
-          <FiPower size={18} color="#41414d" />
-        </button>
+        <Link className="button" to="/">Voltar p home</Link>
       </header>
       <h1>Veículos cadastrados</h1>
 
       <ul>
         {vehicles.map(vehicle => (
           <li key={vehicle._id}>
-          <strong>{`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}</strong>
-          <p>{`Motor: ${vehicle.motor}`}</p>
-          <p>{`Quilometragem: ${vehicle.kms}`}</p>
-          <p>{`Cor: ${vehicle.color}`}</p>
-          <strong>{`${vehicle.other}`}</strong>
-          <strong>Valor:</strong>
-          <p>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)}</p>
-
-          <button type="button" onClick={() => handleDeleteVehicle(vehicle._id)}>
-            <FiTrash2 size={20} color="#a8a8b3" />
-          </button>
+            <strong>{`${vehicle.brand} ${vehicle.model} ${vehicle.year}`}</strong>
+            <p>{`Motor: ${vehicle.motor}`}</p>
+            <p>{`Quilometragem: ${vehicle.kms}`}</p>
+            <p>{`Cor: ${vehicle.color}`}</p>
+            <strong>{`${vehicle.other}`}</strong>
+            <strong>Valor:</strong>
+            <p>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)}</p>
+            {signed ? (<button type="button" onClick={() => handleDeleteVehicle(vehicle._id)}>
+              <FiTrash2 size={20} color="#a8a8b3" />
+            </button>):(<div/>)}              
           </li>
         ))}
       </ul>

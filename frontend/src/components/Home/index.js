@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-
 import './styles.css';
 
 export default function Home() {
@@ -15,6 +14,9 @@ export default function Home() {
       </Link>
       <Link className="back-link" to="/vehicles">
         Vehicles
+      </Link>
+      <Link className="back-link" to="/vehicles/new">
+        Create new vehicle
       </Link>
     </div>
   );

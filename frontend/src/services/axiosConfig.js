@@ -9,13 +9,11 @@ const tokenInterceptor = api.interceptors.response.use(function (response) {
 
 }, function (error) {
   if (error.response.status !== 401) return new Promise.reject(error);
-
+  
   const refreshToken = localStorage.getItem('refreshToken');
-
   if(!refreshToken) {
     localStorage.clear();
-    //set not auth
-    //push to login ? logout from useAuth?
+    return new Promise.reject(error);
   }
 
   api.interceptors.response.eject(tokenInterceptor);
@@ -28,8 +26,7 @@ const tokenInterceptor = api.interceptors.response.use(function (response) {
   }).catch(error => {
     if(error.response.status === 401) {
       localStorage.clear();
-      //set not auth
-      //push to login ? logout from useAuth?
+      return new Promise.reject(error);
     }
   });
 });

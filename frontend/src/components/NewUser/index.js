@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi'
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
 
+import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/axiosConfig';
 import './styles.css';
 
@@ -11,6 +12,14 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const { signed, loadingUser, verifyStorage } = useAuth();
+  const history = useHistory();
+
+  useEffect(() => {
+    if(!loadingUser && !signed) history.push('/login');
+    
+  }, [signed, history, loadingUser]);
 
   async function handleRegister(e) {
     e.preventDefault();
@@ -36,6 +45,7 @@ export default function Register() {
         alert('Usuário criado com sucesso.');
       }
     } catch(error) {
+      verifyStorage();
       alert('Não foi possível criar um novo usuário, tente novamente.');
     }
   }

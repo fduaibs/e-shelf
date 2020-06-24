@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -12,12 +12,20 @@ import eshelfImg from '../../assets/eshelf.png';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-    
-  const { login } = useAuth();
+  
+  const history = useHistory();  
+  const { login, signed } = useAuth();
+
+  useEffect(() => {
+    if(signed) {
+      history.push('/');
+    }
+  });
 
   function handleLogin(e) {
     e.preventDefault();
     login(email, password);
+    history.push('/');
   }
 
   return (
