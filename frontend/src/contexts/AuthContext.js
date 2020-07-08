@@ -58,7 +58,11 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = localStorage.getItem('refreshToken');
     if(refreshToken) {
       try{
-        await api.delete('logout', { refreshToken: refreshToken });
+        const response = await api.delete('/logout', { 
+          data: {
+            refreshToken: refreshToken
+          }
+        });
         localStorage.clear();
         setUser({ _id: null, email: null, name: null });
         setSigned(false);    
