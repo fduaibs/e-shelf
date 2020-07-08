@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/axiosConfig';
@@ -18,13 +17,13 @@ export default function NewVehicle() {
   const [price, setPrice] = useState('');
   const [other, setOther] = useState('');
 
-  const { signed, loadingUser, verifyStorage } = useAuth();
-  const history = useHistory();
+  const { verifyStorage } = useAuth();
+  //const history = useHistory();
 
-  useEffect(() => {
-    if(!signed && !loadingUser) history.push('/login');
+  // useEffect(() => {
+  //   if(!signed && !loadingUser) history.push('/login');
     
-  }, [signed, history, loadingUser]);
+  // }, [signed, history, loadingUser]);
 
   async function handleNewVehicle(e) {
     e.preventDefault();
@@ -55,7 +54,7 @@ export default function NewVehicle() {
         setMotor('');
         setKms('');
         setColor('');
-        setPrice(0);
+        setPrice('');
         setOther('');
         alert('Veículo criado com sucesso.');
       }
@@ -74,7 +73,6 @@ export default function NewVehicle() {
           <h1>Cadastrar novo veículo</h1>
 
           <Link className="back-link" to="/vehicles">
-            <FiArrowLeft size={16} color="#41414d"/>
             Voltar para veículos
           </Link>
         </section>

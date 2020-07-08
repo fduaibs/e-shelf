@@ -1,23 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
 
 import { useAuth } from '../../contexts/AuthContext';
 
-import './styles.css';
+import { Container, Grid, TextField, Button, Typography, Link as MuiLink } from '@material-ui/core';
+import { KeyboardBackspace } from '@material-ui/icons';
+import useStyles from './styles';
 
 import eshelfLogoImg from '../../assets/eshelfLogo.png';
-import eshelfImg from '../../assets/eshelf.png';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
   const history = useHistory();  
-  const { login, signed } = useAuth();
+  const { login, signed, loadingUser } = useAuth();
+
+  const styles = useStyles();
 
   useEffect(() => {
-    if(signed) {
+    if(signed && !loadingUser) {
       history.push('/');
     }
   });
@@ -29,36 +31,48 @@ export default function Login() {
   }
 
   return (
-    <div className="login-container">
-      <section className="form">
-        <img src={eshelfLogoImg} alt="E-Shelf"/>
-        
-        <form onSubmit={handleLogin}>
-          <h1>Faça seu login</h1>
+    <Container>
+      <Grid container>
+        <Grid item xs sm md/>
+        <Grid container className={styles.ContainerStyle} xs={12} sm={6} md={4}>
+          <img src={eshelfLogoImg} alt="E-Shelf"/>
+          <form className={styles.FormStyle} onSubmit={handleLogin}>
+            <Typography variant="h6">Faça seu Login</Typography>
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth={true}
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+            <TextField
+              label="Senha" 
+              variant="outlined"
+              fullWidth={true}
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+            />
+            <Button 
+              variant="contained"
+              color="primary"
+              fullWidth={true}
+              type="submit"
+            >
+                Entrar
+            </Button>
 
-          <input 
-            placeholder="Seu e-mail"
-            type="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <input 
-            placeholder="Sua senha" 
-            type="password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-
-          <button className="button" type="submit">Entrar</button>
-
-          <Link className="back-link" to="/">
-            <FiArrowLeft size={16} color="#41414d" />
-            Voltar para Home
-          </Link>
-        </form>
-      </section>
-
-      <img src={eshelfImg} alt="E-Shelf"/>
-    </div>
+            <MuiLink className={styles.LinkStyle} component={Link} to="/">
+              <Typography variant="body1">
+                <KeyboardBackspace fontSize="small"/>
+                Voltar para Home
+              </Typography>
+            </MuiLink>
+          </form>
+        </Grid>
+        <Grid item xs sm md/>
+      </Grid>
+    </Container>
   );
 }

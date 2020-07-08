@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FiTrash2 } from 'react-icons/fi';
 
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/axiosConfig';
@@ -60,7 +59,7 @@ export default function Vehicles() {
             <strong>Valor:</strong>
             <p>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(vehicle.price)}</p>
             {signed ? (<button type="button" onClick={() => handleDeleteVehicle(vehicle._id)}>
-              <FiTrash2 size={20} color="#a8a8b3" />
+              {/* <FiTrash2 size={20} color="#a8a8b3" /> */}
             </button>):(<div/>)}              
           </li>
         ))}

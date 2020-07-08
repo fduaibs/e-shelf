@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { FiArrowLeft } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/axiosConfig';
@@ -13,13 +12,13 @@ export default function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { signed, loadingUser, verifyStorage } = useAuth();
-  const history = useHistory();
+  const { verifyStorage } = useAuth();
+  // const history = useHistory();
 
-  useEffect(() => {
-    if(!loadingUser && !signed) history.push('/login');
+  // useEffect(() => {
+  //   if(!loadingUser && !signed) history.push('/login');
     
-  }, [signed, history, loadingUser]);
+  // }, [signed, history, loadingUser]);
 
   async function handleRegister(e) {
     e.preventDefault();
@@ -59,7 +58,6 @@ export default function Register() {
           <h1>Cadastrar novos usuários</h1>
 
           <Link className="back-link" to="/">
-            <FiArrowLeft size={16} color="#41414d" />
             Voltar para Home
           </Link>
         </section>
