@@ -8,6 +8,9 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ _id: null, email: null, name: null });
   const [signed, setSigned] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+
+  console.log('signed?', signed);
+  console.log('loading?', loadingUser);
   
   useEffect(() => {
     const storagedUser = JSON.parse(localStorage.getItem('user'));
