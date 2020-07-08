@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
     const refreshToken = localStorage.getItem('refreshToken');
     if(refreshToken) {
       try{
-        const response = await api.delete('/logout', { 
+        await api.delete('/logout', { 
           data: {
             refreshToken: refreshToken
           }
