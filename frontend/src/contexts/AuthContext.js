@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import api from '../services/axiosConfig';
 
@@ -8,6 +9,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState({ _id: null, email: null, name: null });
   const [signed, setSigned] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
+
+  const history = useHistory();
 
   console.log('signed?', signed);
   console.log('loading?', loadingUser);
@@ -49,6 +52,7 @@ export const AuthProvider = ({ children }) => {
 
       setUser(response.data.user);
       setSigned(true);
+      history.push('/');
     } catch (error) {
       alert('Falha no login, tente novamente.');
     }     
@@ -65,7 +69,8 @@ export const AuthProvider = ({ children }) => {
         });
         localStorage.clear();
         setUser({ _id: null, email: null, name: null });
-        setSigned(false);    
+        setSigned(false);
+        history.push('/'); 
       } catch (error) {
         alert('Falha ao deslogar, tente novamente.');
       }
