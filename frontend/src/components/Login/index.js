@@ -27,14 +27,13 @@ export default function Login() {
   function handleLogin(e) {
     e.preventDefault();
     login(email, password);
-    history.push('/');
   }
 
   return (
     <Container>
       <Grid container>
         <Grid item xs sm md/>
-        <Grid container className={styles.ContainerStyle} xs={12} sm={6} md={4}>
+        <Grid container item className={styles.ContainerStyle} xs={12} sm={6} md={4}>
           <img src={eshelfLogoImg} alt="E-Shelf"/>
           <form className={styles.FormStyle} onSubmit={handleLogin}>
             <Typography variant="h6">Faça seu Login</Typography>
