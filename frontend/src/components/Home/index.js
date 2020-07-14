@@ -9,6 +9,9 @@ export default function Home() {
       <Link className="back-link" to="/users/new">
         Create new user
       </Link>
+      <Link className="back-link" to="/users/news">
+        NotFound
+      </Link>
       <Link className="back-link" to="/login">
         Login
       </Link>
