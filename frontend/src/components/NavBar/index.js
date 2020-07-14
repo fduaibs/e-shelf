@@ -11,9 +11,8 @@ import eshelfLogo from '../../assets/eshelfLogo.png';
 
 export default function NavBar() {
   const [anchorEl, setAnchorEl] = useState(null);
-  const { signed, loadingUser, user, logout } = useAuth();
 
-  console.log(user)
+  const { signed, loadingUser, user, logout } = useAuth();
 
   const history = useHistory();
 
@@ -39,6 +38,11 @@ export default function NavBar() {
     history.push('/vehicles/new');
   }
 
+  const handleNewUser = () => {
+    handleClose()
+    history.push('/users/new');
+  }
+
   const handleLogout = () => {
     handleClose()
     logout()
@@ -49,7 +53,9 @@ export default function NavBar() {
       <AppBar position="fixed">
         <Toolbar className={styles.toolbarStyle}>
           <MuiLink component={Link} to="/">
-            <img className={styles.logoStyle} src={eshelfLogo} alt="E-Shelf"/>
+            <IconButton>
+              <img className={styles.logoStyle} src={eshelfLogo} alt="E-Shelf"/>
+            </IconButton>
           </MuiLink>
           <div className={styles.middleDivStyle} />
           {signed && !loadingUser ? (
@@ -84,6 +90,11 @@ export default function NavBar() {
               >
                 <MenuItem onClick={handleMyAccount}>Minha conta</MenuItem>
                 <MenuItem onClick={handleNewVehicle}>Cadastrar veículo</MenuItem>
+                {user.isAdmin ? (
+                  <MenuItem onClick={handleNewUser}>Cadastrar usuário</MenuItem>
+                ):(
+                  <div />
+                )}
                 <MenuItem onClick={handleLogout}>Sair</MenuItem>
               </Menu>
             </>
