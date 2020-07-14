@@ -7,8 +7,16 @@ export default function PrivateRoute({ component: Component, ...rest }) {
   const { signed, loadingUser } = useAuth();
 
   return (
-    <Route  {...rest}  render={props =>  
-      signed && !loadingUser ? (<Component {...props} />) : (<Redirect to="/login"/>)
+    <Route  {...rest}  render={props =>
+      !loadingUser ? (
+        signed ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login"/>
+        )
+      ) : (
+        <div />
+      )
     }/>
   );
 } 
