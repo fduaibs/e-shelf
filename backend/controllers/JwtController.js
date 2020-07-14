@@ -25,13 +25,13 @@ module.exports = {
     });
   },
   createAccessToken(user) {
-    const { name, email, _id } = user;
-    const accessToken = jwt.sign({ _id, name, email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+    const { name, email, _id, isAdmin } = user;
+    const accessToken = jwt.sign({ _id, name, email, isAdmin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
     return accessToken;
   },
   async createRefreshToken(user) {
-    const { name, email, _id } = user;
-    const refreshToken = jwt.sign({ _id, name, email }, process.env.REFRESH_TOKEN_SECRET);
+    const { name, email, _id, isAdmin } = user;
+    const refreshToken = jwt.sign({ _id, name, email, isAdmin }, process.env.REFRESH_TOKEN_SECRET);
     await RefreshTokenModel.create({
       admin_id: user._id,
       token: refreshToken,
@@ -47,8 +47,8 @@ module.exports = {
     
     jwt.verify( refreshToken.token, process.env.REFRESH_TOKEN_SECRET, (error, user) => {
       if(error) return response.sendStatus(401);
-      const { _id, name, email } = user;
-      const accessToken = jwt.sign({ _id: _id, name: name, email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
+      const { _id, name, email, isAdmin } = user;
+      const accessToken = jwt.sign({ _id: _id, name: name, email: email, isAdmin: isAdmin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30m' });
       response.status(201).json({ accessToken: accessToken });
     })
   }

@@ -6,7 +6,7 @@ import api from '../services/axiosConfig';
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState({ _id: null, email: null, name: null });
+  const [user, setUser] = useState({ _id: null, email: null, name: null, isAdmin: null });
   const [signed, setSigned] = useState(false);
   const [loadingUser, setLoadingUser] = useState(true);
 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     if(!storagedRefreshToken || !storagedUser) {
       localStorage.clear();
-      setUser({ _id: null, email: null, name: null });
+      setUser({ _id: null, email: null, name: null, isAdmin: null });
       setSigned(false);
     }
   }
@@ -45,6 +45,9 @@ export const AuthProvider = ({ children }) => {
           password: password,
         }
       });
+
+      // const { name: resName, email: resEmail, _id: resId } = response.data.user;
+      // const userWithoutIsAdmin = { _id: resId, name: resName, email: resEmail };
   
       localStorage.setItem('user', JSON.stringify(response.data.user));
       localStorage.setItem('accessToken', response.data.accessToken);
@@ -68,7 +71,7 @@ export const AuthProvider = ({ children }) => {
           }
         });
         localStorage.clear();
-        setUser({ _id: null, email: null, name: null });
+        setUser({ _id: null, email: null, name: null, isAdmin: null });
         setSigned(false);
         history.push('/'); 
       } catch (error) {
